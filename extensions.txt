@@ -1,0 +1,25 @@
+Adam Nnoli aon2
+12-4-2018
+
+Multiple Waves
+I added multiple waves to the game by creating a new wave object when the
+player won the game. I added an attribute called _round to Invaders to keep
+track of the round number the player was on so I knew whether to give the
+player another life for surviving each round and how many times the speed
+needed to be multiplied each round. 
+
+
+Sound Effects
+I added sound effects by created sound objects in wave and assigning them to
+attributes. I then played the sounds each time a bolt was fired or an alien or ship died.
+
+Dynamically Sped Up Aliens
+I sped up the aliens each time one was killed by multiplying the _alienspeed
+attribute by a factor in consts in the helper method which checks if an alien
+has been killed
+
+Keeping Track of Score
+I kept track of score by added two attributes in Invaders, one to hold the
+score value and one to hold the object that was displayed in the game. I also
+added an attribute in wave to keep track of the score in the round there. I then
+used a getter to send that information to Invaders which displayed it to the game view
