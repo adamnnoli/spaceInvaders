@@ -1,13 +1,7 @@
 """
 Primary module for Alien Invaders
 
-This module contains the main controller class for the Alien Invaders application. There
-is no need for any additional classes in this module.  If you need more classes, 99% of
-the time they belong in either the wave module or the models module. If you are unsure
-about where a new class should go, post a question on Piazza.
-
-Adam Nnoli aon2
-12-2-2018
+This module contains the main controller class for the Alien Invaders application.
 """
 from consts import *
 from game2d import *
@@ -103,7 +97,8 @@ class Invaders(GameApp):
         self._gamescore.y = GAME_HEIGHT-(ALIEN_CEILING/2)
         self._gamescore.font_name = 'RetroGame.ttf'
         self._gamescore.font_size = 25
-        self._background = GRectangle(width=GAME_WIDTH, height=GAME_HEIGHT, fillcolor = "black", x = GAME_WIDTH/2, y = GAME_HEIGHT/2)
+        self._background = GRectangle(width=GAME_WIDTH, height=GAME_HEIGHT,
+                           fillcolor = "black", x = GAME_WIDTH/2, y = GAME_HEIGHT/2)
         #Show starting message
         if self._state == STATE_INACTIVE:
             self._show_welcome_message()

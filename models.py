@@ -95,12 +95,11 @@ class Ship(GImage):
         right_edge = bolt.x + (BOLT_WIDTH/2)
         top_edge = bolt.y + (BOLT_HEIGHT/2)
         bottom_edge = bolt.y - (BOLT_HEIGHT/2)
-        a = super().contains((left_edge,top_edge))
-        b = super().contains((left_edge,bottom_edge))
-        c = super().contains((right_edge,top_edge))
-        d = super().contains((right_edge,bottom_edge))
-        result = a and b and c and d
-        return result
+        top_left = super().contains((left_edge,top_edge))
+        bot_left = super().contains((left_edge,bottom_edge))
+        top_right = super().contains((right_edge,top_edge))
+        bot_right = super().contains((right_edge,bottom_edge))
+        return top_left or bot_left or top_right or bot_right
 
 
 class Alien(GImage):
@@ -163,12 +162,11 @@ class Alien(GImage):
         right_edge = bolt.x + (BOLT_WIDTH/2)
         top_edge = bolt.y + (BOLT_HEIGHT/2)
         bottom_edge = bolt.y - (BOLT_HEIGHT/2)
-        a = super().contains((left_edge,top_edge))
-        b = super().contains((left_edge,bottom_edge))
-        c = super().contains((right_edge,top_edge))
-        d = super().contains((right_edge,bottom_edge))
-        result = a and b and c and d
-        return result
+        top_left = super().contains((left_edge,top_edge))
+        bot_left = super().contains((left_edge,bottom_edge))
+        top_right = super().contains((right_edge,top_edge))
+        bot_right = super().contains((right_edge,bottom_edge))
+        return top_left or bot_left or top_right or bot_right
 
 
 class Bolt(GRectangle):
