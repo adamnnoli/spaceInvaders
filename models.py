@@ -22,8 +22,8 @@ make a new class or not, please ask on Piazza.
 Adam Nnoli aon2
 12-3-2018
 """
-from consts import *
-from game2d import *
+from consts import BOLT_HEIGHT, BOLT_WIDTH
+from game2d import GImage, GRectangle
 
 # PRIMARY RULE: Models are not allowed to access anything in any module other than
 # consts.py.  If you need extra information from Gameplay, then it should be
@@ -56,9 +56,8 @@ class Ship(GImage):
     LIST MORE ATTRIBUTES (AND THEIR INVARIANTS) HERE IF NECESSARY
     """
 
-
     # INITIALIZER TO CREATE A NEW SHIP
-    def __init__(self, x, y, width,height, source):
+    def __init__(self, x, y, width, height, source):
         """
         Create a Ship Object
 
@@ -80,11 +79,11 @@ class Ship(GImage):
         Parameter: source, image of the ship
         Precondition: string corresponding to a valid image(.png)
         """
-        #Call the GImage Initializer
+        # Call the GImage Initializer
         super().__init__(x=x, y=y, width=width, height=height, source=source)
 
-    #HELPER METHOD TO CHECK FOR COLLISIONS
-    def collides(self,bolt):
+    # HELPER METHOD TO CHECK FOR COLLISIONS
+    def collides(self, bolt):
         """
         Returns: True if the bolt was fired by an alien and collides with the player
 
@@ -95,10 +94,10 @@ class Ship(GImage):
         right_edge = bolt.x + (BOLT_WIDTH/2)
         top_edge = bolt.y + (BOLT_HEIGHT/2)
         bottom_edge = bolt.y - (BOLT_HEIGHT/2)
-        top_left = super().contains((left_edge,top_edge))
-        bot_left = super().contains((left_edge,bottom_edge))
-        top_right = super().contains((right_edge,top_edge))
-        bot_right = super().contains((right_edge,bottom_edge))
+        top_left = super().contains((left_edge, top_edge))
+        bot_left = super().contains((left_edge, bottom_edge))
+        top_right = super().contains((right_edge, top_edge))
+        bot_right = super().contains((right_edge, bottom_edge))
         return top_left or bot_left or top_right or bot_right
 
 
@@ -125,7 +124,7 @@ class Alien(GImage):
     """
 
     # INITIALIZER TO CREATE AN ALIEN
-    def __init__(self, x, y, width,height, source):
+    def __init__(self, x, y, width, height, source):
         """
         Creates a single Alien Object
 
@@ -147,11 +146,11 @@ class Alien(GImage):
         Parameter: source, image of the alien
         Precondition: string corresponding to a valid image(.png)
         """
-        #Call GImage Intializer
+        # Call GImage Intializer
         super().__init__(x=x, y=y, width=width, height=height, source=source)
 
     # METHOD TO CHECK FOR COLLISION (IF DESIRED)
-    def collides(self,bolt):
+    def collides(self, bolt):
         """
         Returns: True if the bolt was fired by the player and collides with this alien
 
@@ -162,10 +161,10 @@ class Alien(GImage):
         right_edge = bolt.x + (BOLT_WIDTH/2)
         top_edge = bolt.y + (BOLT_HEIGHT/2)
         bottom_edge = bolt.y - (BOLT_HEIGHT/2)
-        top_left = super().contains((left_edge,top_edge))
-        bot_left = super().contains((left_edge,bottom_edge))
-        top_right = super().contains((right_edge,top_edge))
-        bot_right = super().contains((right_edge,bottom_edge))
+        top_left = super().contains((left_edge, top_edge))
+        bot_left = super().contains((left_edge, bottom_edge))
+        top_right = super().contains((right_edge, top_edge))
+        bot_right = super().contains((right_edge, bottom_edge))
         return top_left or bot_left or top_right or bot_right
 
 
@@ -204,7 +203,7 @@ class Bolt(GRectangle):
         return self._velocity
 
     # INITIALIZER TO SET THE VELOCITY
-    def __init__(self, x, y, BOLT_WIDTH, BOLT_HEIGHT, BOLT_VELOCITY):
+    def __init__(self, x, y, BOLT_VELOCITY):
         """
         Creates a single Bolt object
 
@@ -226,8 +225,8 @@ class Bolt(GRectangle):
         Parameter: BOLT_VELOCITY, how far the bolt moves each frame
         Precondition: Must be a number, int or float
         """
-        #Call GRectangle Initializer
+        # Call GRectangle Initializer
         super().__init__(x=x, y=y, width=BOLT_WIDTH, height=BOLT_HEIGHT, fillcolor="white")
 
-        #Set Velocity
+        # Set Velocity
         self._velocity = BOLT_VELOCITY

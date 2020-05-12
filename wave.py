@@ -15,11 +15,11 @@ issue.  If you do not know, ask on Piazza and we will answer.
 Adam Nnoli aon2
 12-2-2018
 """
-from game2d import *
-from consts import *
-from models import *
 import random
-from Sounds import *
+
+from consts import *
+from game2d import *
+from models import *
 
 # PRIMARY RULE: Wave can only access attributes in models.py via getters/setters
 # Wave is NOT allowed to access anything in app.py (Subcontrollers are not permitted
@@ -110,8 +110,8 @@ class Wave(object):
         Parameter: Speed
         Precondtion: Must be an float
         """
-        #To speed up aliens, factor should be < 1
-        #To slow down aliens, factor should be > 1
+        # To speed up aliens, factor should be < 1
+        # To slow down aliens, factor should be > 1
         self._alienspeed = speed
 
     def getRoundScore(self):
@@ -135,7 +135,7 @@ class Wave(object):
         self._time = 0
         self._bolts = []
         self._alienspeed = ALIEN_SPEED
-        self._afirerate = random.randint(1,BOLT_RATE)
+        self._afirerate = random.randint(1, BOLT_RATE)
         self._asteps = 0
         self._lives = SHIP_LIVES
         self._lostlives = 0
@@ -146,7 +146,7 @@ class Wave(object):
         self._roundscore = 0
 
     # UPDATE METHOD TO MOVE THE SHIP, ALIENS, AND LASER BOLTS
-    def update(self,input,dt):
+    def update(self, input, dt):
         """
         Updates the positions and existence of the game objects.
 
@@ -156,31 +156,31 @@ class Wave(object):
         """
         self._update_ship(input)
         self._update_aliens(dt)
-        self._update_bolts(input,dt)
+        self._update_bolts(input, dt)
         self._update_score()
 
     # DRAW METHOD TO DRAW THE SHIP, ALIENS, DEFENSIVE LINE AND BOLTS
-    def draw(self,view):
+    def draw(self, view):
         """
         Draws the Aliens, Ship, Defense Line, and Bolts to the approviate view
 
         This method calls the draw method for each object in the game
         """
-        #Draw ALiens
+        # Draw ALiens
         for row in self._aliens:
             for alien in row:
                 if not alien is None:
                     alien.draw(view)
-        #Draw Defense Line
+        # Draw Defense Line
         self._dline.draw(view)
-        #Draw Ship
+        # Draw Ship
         if not self._ship is None:
-           self._ship.draw(view)
-         #Draw Bolts
+            self._ship.draw(view)
+          # Draw Bolts
         for bolt in self._bolts:
             bolt.draw(view)
 
-    #Helper Methods for multiple lives
+    # Helper Methods for multiple lives
     def lives_left(self):
         """
         Returns True if the player has any lives remaining; False otherwise
@@ -196,7 +196,8 @@ class Wave(object):
         """
         self._create_ship()
 
-    #Methods to Crete Game Objects
+    # Methods to Create Game Objects
+
     def _create_aliens(self):
         """
         Creates the aliens for the game.
@@ -204,32 +205,25 @@ class Wave(object):
         This method creates a 2D list of alien objects and gives it to
         the attribute _aliens.
         """
-        result = [] #will hold the nested list
-        alien_y = GAME_HEIGHT-ALIEN_CEILING-(ALIEN_ROWS)*(ALIEN_HEIGHT+ALIEN_V_SEP)
-        alien_y += ALIEN_HEIGHT/2 #Find the vertical height for the alien row
-        c = 0
-        if ALIEN_ROWS % 2 == 0: #even number of rows
-            for x in range(int(ALIEN_ROWS/2)):
-                alien_source = ALIEN_IMAGES[c%(len(ALIEN_IMAGES))] #Find the correct image for the aliens
-                for k in range(2): #Create 2 Rows with the image
-                    e = self._create_alien_row(alien_source,alien_y) # Create Row
-                    alien_y += (ALIEN_V_SEP + ALIEN_HEIGHT) #Move down after each row
-                    result.append(e)
-                c += 1
-        if ALIEN_ROWS % 2 == 1: #odd number of rows
-            for x in range(int(ALIEN_ROWS/2.0 -.5)):
-                alien_source = ALIEN_IMAGES[c%(len(ALIEN_IMAGES))] #Find the correct image
-                for k in range(2): #Create 2 Rows with the image
-                    e = self._create_alien_row(alien_source,alien_y) # Create Row
-                    alien_y += (ALIEN_V_SEP + ALIEN_HEIGHT) #Move down after each row
-                    result.append(e)
-                c += 1
-            alien_source = ALIEN_IMAGES[c%(len(ALIEN_IMAGES))]
-            e = self._create_alien_row(alien_source,alien_y) #Make last row
-            result.append(e)
+        result = []
+        y = GAME_HEIGHT-ALIEN_CEILING - \
+            (ALIEN_ROWS)*(ALIEN_HEIGHT+ALIEN_V_SEP) + ALIEN_HEIGHT/2
+        rows_made = 0
+        while rows_made < ALIEN_ROWS:
+            for image in ALIEN_IMAGES:
+                for i in range(2):
+                    result.append(self._create_alien_row(image, y))
+                    y += ALIEN_V_SEP + ALIEN_HEIGHT
+                    print("Made a row")
+                    if len(result) == ALIEN_ROWS:
+                        print(len(result))
+                        self._aliens = result
+                        return
+            rows_made += 6
         self._aliens = result
+        return
 
-    def _create_alien_row(self,image,y):
+    def _create_alien_row(self, image, y):
         """
         Creates 1 row of aliens.
 
@@ -245,10 +239,10 @@ class Wave(object):
         """
         alien_x = ALIEN_H_SEP + (ALIEN_WIDTH/2)
         row = []
-        for i in range(ALIENS_IN_ROW):# Make Each Alien in the row
-            alien= Alien(x=alien_x, y=y, width=ALIEN_WIDTH,
-                            height=ALIEN_HEIGHT, source=image)
-            alien_x += (ALIEN_WIDTH + ALIEN_H_SEP) # Move over for each alien
+        for i in range(ALIENS_IN_ROW):  # Make Each Alien in the row
+            alien = Alien(x=alien_x, y=y, width=ALIEN_WIDTH,
+                          height=ALIEN_HEIGHT, source=image)
+            alien_x += (ALIEN_WIDTH + ALIEN_H_SEP)  # Move over for each alien
             row.append(alien)
         return row
 
@@ -259,7 +253,7 @@ class Wave(object):
         This method initializes a new Ship object
         and assigns it to the attribute _ship
         """
-        #Find Ship Coordinates
+        # Find Ship Coordinates
         x = GAME_WIDTH/2
         y = SHIP_BOTTOM + (SHIP_HEIGHT/2)
         # Create Ship Object
@@ -273,10 +267,10 @@ class Wave(object):
         This method initializes a new GPath object
         and assigns it to the attribute _dline
         """
-        #Find Endpoints
-        points = [0,DEFENSE_LINE, GAME_WIDTH, DEFENSE_LINE]
-        #Create GPath Object
-        self._dline = GPath(points=points, linewidth = 1,linecolor = "black")
+        # Find Endpoints
+        points = [0, DEFENSE_LINE, GAME_WIDTH, DEFENSE_LINE]
+        # Create GPath Object
+        self._dline = GPath(points=points, linewidth=1, linecolor="black")
 
     def _create_bolt(self, x, y, BOLT_VELOCITY):
         """
@@ -296,13 +290,13 @@ class Wave(object):
         Precondition: A float #Use positive or negative velocity to
             determine if the bolt was shot by the ship or an alien
         """
-        #Create Bolt object
-        bolt = Bolt(x,y,BOLT_WIDTH, BOLT_HEIGHT,BOLT_VELOCITY)
+        # Create Bolt object
+        bolt = Bolt(x, y, BOLT_VELOCITY)
         return bolt
 
-    #Methods to Update Game Objects
+    # Methods to Update Game Objects
 
-    #Update Ship Object
+    # Update Ship Object
     def _update_ship(self, input):
         """
         Updates the Ship's Position and life.
@@ -311,24 +305,24 @@ class Wave(object):
         calls a helper method to determine if the ship has been hit by a bolt
         and needs to be destroyed.
         """
-        #Check what keys the user is inputing
+        # Check what keys the user is inputing
         curr_keys = input.keys
         if not self._ship is None:
-            #Move ship left or right as necessary
+            # Move ship left or right as necessary
             if "left" in curr_keys:
                 self._ship.x -= SHIP_MOVEMENT
             if "right" in curr_keys:
                 self._ship.x += SHIP_MOVEMENT
-            #Check if ship went off-screen and move it back
+            # Check if ship went off-screen and move it back
             if self._ship.x + SHIP_WIDTH > GAME_WIDTH:
                 self._ship.x -= GAME_WIDTH
             if self._ship.x - SHIP_WIDTH < 0:
                 self._ship.x += GAME_WIDTH
-            #Call helper to see if ship was hit
+            # Call helper to see if ship was hit
             self._kill_ship()
 
-    #Update Alien Objects
-    def _update_aliens(self,dt):
+    # Update Alien Objects
+    def _update_aliens(self, dt):
         """
         Updates the position of the aliens and removes the aliens that have died.
 
@@ -338,17 +332,17 @@ class Wave(object):
         This method also checks if all of the aliens have been destroyed and the
         win condition has been met.
         """
-        #Call helper to see if all aliens have been destroyed
+        # Call helper to see if all aliens have been destroyed
         self._check_win()
 
-        #Check to see if the aliens should be moved
+        # Check to see if the aliens should be moved
         if self._time >= self._alienspeed:
-            self._move_aliens() #Call helper to move them if necessary
-            self._time = 0 #reset time
+            self._move_aliens()  # Call helper to move them if necessary
+            self._time = 0  # reset time
         else:
-            self._time += dt #add time if alins have not moved
+            self._time += dt  # add time if alins have not moved
 
-        #Call helper to check if any aliens have been killed
+        # Call helper to check if any aliens have been killed
         self._kill_aliens()
 
     def _move_aliens(self):
@@ -358,9 +352,9 @@ class Wave(object):
         This method checks to see if the aliens need to be moved down, left,
         or right, and then calls the appropriate helper function.
         """
-        self._asteps += 1 #Keep track of number of steps taken to see when to fire
+        self._asteps += 1  # Keep track of number of steps taken to see when to fire
         alien_xs = []
-        #Check if aliens should move down and change direction
+        # Check if aliens should move down and change direction
         for row in self._aliens:
             for alien in row:
                 if not alien is None:
@@ -370,18 +364,18 @@ class Wave(object):
         else:
             furthest_left = max(alien_xs)
             furthest_right = min(alien_xs)
-            #Move down and march left
+            # Move down and march left
             if furthest_left > GAME_WIDTH - ALIEN_H_SEP and self._adirect == "right":
                 self._move_aliens_down()
                 self._adirect = "left"
-            #Move down and march right
+            # Move down and march right
             if furthest_right < ALIEN_H_SEP and self._adirect == "left":
                 self._move_aliens_down()
                 self._adirect = "right"
-            #Call helpers to move left or right
+            # Call helpers to move left or right
             if self._adirect == "left":
                 self._move_aliens_left()
-            if self._adirect ==  "right":
+            if self._adirect == "right":
                 self._move_aliens_right()
 
     def _move_aliens_right(self):
@@ -410,19 +404,19 @@ class Wave(object):
             for alien in row:
                 if not alien is None:
                     alien.y -= ALIEN_V_WALK
-                    #Check if Aliens passed the Defense line
+                    # Check if Aliens passed the Defense line
                     if alien.y < DEFENSE_LINE:
                         self._lives = -1
                         self._ship = None
-                        #Set lives to -1 and ship to None so Invaders update
-                        #takes care of ending the round in the next frame
+                        # Set lives to -1 and ship to None so Invaders update
+                        # takes care of ending the round in the next frame
 
-    #Update Bolt Objects
-    def _update_bolts(self,input, dt):
+    # Update Bolt Objects
+    def _update_bolts(self, input, dt):
         """
         Creates and Moves Bolts
         """
-        #Create Ship Bolts
+        # Create Ship Bolts
         curr_keys = input.keys
         if "up" in curr_keys and (not self._ship is None) and (not self._isPlayerBolt()):
             x = self._ship.x
@@ -430,42 +424,42 @@ class Wave(object):
             bolt = self._create_bolt(x, y, BOLT_SPEED)
             self._bolts.append(bolt)
             self._soundshipbolt.play(loop=False)
-        
-        #Create Alien Bolts
-        if self._asteps == self._afirerate: #Check if aliens have taken enough steps
+
+        # Create Alien Bolts
+        if self._asteps == self._afirerate:  # Check if aliens have taken enough steps
             self._fire_alien_bolt()
             self._asteps = 0
 
-        #Move Bolts
+        # Move Bolts
         for bolt in self._bolts:
             bolt.y += bolt.getVelocity()
             if bolt.y > GAME_HEIGHT or bolt.y < 0:
                 self._bolts.remove(bolt)
-                #Get rid of bolts that have gone off-screen
+                # Get rid of bolts that have gone off-screen
 
     def _fire_alien_bolt(self):
         """
         Fires a Bolt from a single Alien
         """
-        #Choose an alien to fire from
+        # Choose an alien to fire from
         b = []
         while len(b) == 0:
-            a = random.randint(0,ALIENS_IN_ROW-1) #Choose random column
+            a = random.randint(0, ALIENS_IN_ROW-1)  # Choose random column
             for row in self._aliens:
-                c = row[a] #Gather all aliens in the column
+                c = row[a]  # Gather all aliens in the column
                 if not c is None:
                     b.append(c)
-        #Find the alien at the lowest height the column
+        # Find the alien at the lowest height the column
         d = []
         for alien in b:
             e = alien.y
             d.append(e)
         f = d.index(min(d))
         g = b[f]
-        #Create the Bolt for the alien
+        # Create the Bolt for the alien
         a = self._create_bolt(g.x, g.y - (ALIEN_HEIGHT/2), -1 * BOLT_SPEED)
-        #Make Bolt Velocity negative to show alien bolt
-        self._soundalienbolt.play(loop=False) #Play the alien bolt sound
+        # Make Bolt Velocity negative to show alien bolt
+        self._soundalienbolt.play(loop=False)  # Play the alien bolt sound
         self._bolts.append(a)
 
     def _isPlayerBolt(self):
@@ -473,39 +467,38 @@ class Wave(object):
         Returns: True if a bolt made by the player is currently on the screen
         """
         for bolt in self._bolts:
-            if bolt.getVelocity() > 0: #Pos velocity means fired by ship
+            if bolt.getVelocity() > 0:  # Pos velocity means fired by ship
                 return True
         return False
 
-    #Update Score
+    # Update Score
     def _update_score(self):
         """
         Updates the score for the round, ALIEN_POINTS per each alien killed
         """
-        self._roundscore = 0 #Reset Score to only add when alien killed
+        self._roundscore = 0  # Reset Score to only add when alien killed
         for row in self._aliens:
             for alien in row:
-                if alien is None: #For each alien killed add points
+                if alien is None:  # For each alien killed add points
                     self._roundscore += ALIEN_POINTS
 
-    #Methods to Handle Collisions
+    # Methods to Handle Collisions
     def _kill_aliens(self):
         """
         Checks if any aliens have collided with a bolt and if so kills them,
         plays the appropriate sound, and removes the bolt.
         """
         for bolt in self._bolts:
-            #Only Check Ship Bolts
+            # Only Check Ship Bolts
             if bolt.getVelocity() > 0:
                 for row in self._aliens:
                     for alien in row:
-                        if not alien is None:
-                            if alien.collides(bolt):
-                                #Kill Alien, Play Sound, Remove Bolt, Change Speed
-                                row[row.index(alien)] = None
-                                self._soundaliendie.play(loop=False)
-                                self._bolts.remove(bolt)
-                                self.setAlienSpeed(self._alienspeed * A_SPEED_FAC)
+                        if not alien is None and alien.collides(bolt):
+                            # Kill Alien, Play Sound, Remove Bolt, Change Speed
+                            row[row.index(alien)] = None
+                            self._soundaliendie.play(loop=False)
+                            self._bolts.remove(bolt)
+                            self.setAlienSpeed(self._alienspeed * A_SPEED_FAC)
 
     def _kill_ship(self):
         """
@@ -516,16 +509,16 @@ class Wave(object):
         player has left and has lost to the correct number.
         """
         for bolt in self._bolts:
-            #Only Check ALien Bolts
+            # Only Check ALien Bolts
             if bolt.getVelocity() < 0 and not self._ship is None and self._ship.collides(bolt):
-                    #Kill Ship, Play Sund, Remove Bolt, Change Lives
-                    self._ship = None
-                    self._soundshipdie.play(loop=False)
-                    self._bolts.remove(bolt)
-                    self._lives -= 1
-                    self._lostlives += 1
+                # Kill Ship, Play Sund, Remove Bolt, Change Lives
+                self._ship = None
+                self._soundshipdie.play(loop=False)
+                self._bolts.remove(bolt)
+                self._lives -= 1
+                self._lostlives += 1
 
-    #Method to See if the round has been completed
+    # Method to See if the round has been completed
     def _check_win(self):
         """
         Checks to see if the player has completed the round
@@ -537,9 +530,9 @@ class Wave(object):
         dead_aliens = 0
         for row in self._aliens:
             for alien in row:
-                if alien is None: #if the alien is None add to a
+                if alien is None:  # if the alien is None add to a
                     dead_aliens += 1
-        #Check if all of the aliens in the wave are dead
+        # Check if all of the aliens in the wave are dead
         if dead_aliens == ALIEN_ROWS*ALIENS_IN_ROW:
             self._lives = -1
             self._bolts.clear()

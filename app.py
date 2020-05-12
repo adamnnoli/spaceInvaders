@@ -3,13 +3,13 @@ Primary module for Alien Invaders
 
 This module contains the main controller class for the Alien Invaders application.
 """
+from wave import *
 from consts import *
 from game2d import *
-from wave import *
-
 
 # PRIMARY RULE: Invaders can only access attributes in wave.py via getters/setters
 # Invaders is NOT allowed to access anything in models.py
+
 
 class Invaders(GameApp):
     """
@@ -86,7 +86,7 @@ class Invaders(GameApp):
         invariants. When done, it sets the _state to STATE_INACTIVE and create a message
         (in attribute _text) saying that the user should press to play a game.
         """
-        #Create Game Attributes
+        # Create Game Attributes
         self._state = STATE_INACTIVE
         self._round = 1
         self._scorekeeper = 0
@@ -98,14 +98,14 @@ class Invaders(GameApp):
         self._gamescore.font_name = 'RetroGame.ttf'
         self._gamescore.font_size = 25
         self._background = GRectangle(width=GAME_WIDTH, height=GAME_HEIGHT,
-                           fillcolor = "black", x = GAME_WIDTH/2, y = GAME_HEIGHT/2)
-        #Show starting message
+                                      fillcolor="black", x=GAME_WIDTH/2, y=GAME_HEIGHT/2)
+        # Show starting message
         if self._state == STATE_INACTIVE:
             self._show_welcome_message()
         else:
             self._text = None
 
-    def update(self,dt):
+    def update(self, dt):
         """
         Animates a single frame in the game.
 
@@ -153,37 +153,37 @@ class Invaders(GameApp):
         """
         # Determine the current state
         if self._state == STATE_INACTIVE:
-            #Dismiss the Screen and begn game when user is ready
+            # Dismiss the Screen and begn game when user is ready
             self._dismiss_screen()
         if self._state == STATE_NEWWAVE:
-            #Start the Game
+            # Start the Game
             self._start_game()
         if self._state == STATE_ACTIVE:
-            #Update the Score
+            # Update the Score
             self._update_score()
-            #Check if the user wants to pause the game
+            # Check if the user wants to pause the game
             curr_keys = self.input.keys
             if "spacebar" in curr_keys:
                 self._state = STATE_PAUSED
-            #Check if the player needs a new ship, beat the round, or lost the game
+            # Check if the player needs a new ship, beat the round, or lost the game
             ship = self._wave.getShip()
             if ship is None:
                 if self._wave.lives_left() == True:
-                    #Create a new ship
+                    # Create a new ship
                     self._state = STATE_PAUSED
                 if not (self._wave.lives_left() == True):
-                    #Game Over
+                    # Game Over
                     self._handle_loss()
             if not ship is None:
                 if not self._wave.lives_left() == True:
-                    #Wave Complete
+                    # Wave Complete
                     self._handle_win()
-            #Let Wave Update handle game objects
+            # Let Wave Update handle game objects
             self._wave.update(self.input, dt)
-            #Keep track of lives
+            # Keep track of lives
             self._lives_helper()
         if self._state == STATE_PAUSED:
-            #Deal with STATE_PAUSED
+            # Deal with STATE_PAUSED
             self._handle_pause()
 
     def draw(self):
@@ -200,15 +200,14 @@ class Invaders(GameApp):
         """
         self._background.draw(self.view)
         if self._state == STATE_ACTIVE or self._state == STATE_PAUSED:
-            #Show only if Game is Active or Paused
+            # Show only if Game is Active or Paused
             self._wave.draw(self.view)
             self._gamescore.draw(self.view)
         if not self._text is None:
-            #Show if text is there
+            # Show if text is there
             self._text.draw(self.view)
+    # First Game Beginning Helper Methods
 
-
-    #First Game Beginning Helper Methods
     def _show_welcome_message(self):
         """
         Returns: GLabel Object
@@ -216,35 +215,36 @@ class Invaders(GameApp):
         This method creates a GLabel object for the welcome message
         and assigns it to the attribute _text
         """
-        #Create A Glabel object for the message
-        welcome_message = GLabel(text="Press S to Start \n or Space for \n Intructions")
+        # Create A Glabel object for the message
+        welcome_message = GLabel(
+            text="Press S to Start \n or Space for \n Intructions")
         welcome_message.x = (GAME_WIDTH/2.0)
         welcome_message.y = (GAME_HEIGHT/2.0)
         welcome_message.font_size = 50
         welcome_message.font_name = 'RetroGame.ttf'
         welcome_message.linecolor = "white"
-        #Assign the GLabel Object to the _text attribute
+        # Assign the GLabel Object to the _text attribute
         self._text = welcome_message
 
     def _displayInstructions(self):
         """
         Creates a shows a message with the instructions on how to play the game.
         """
-        #Write the Message
-        text = "INSTRUCTIONS \n Goal: Survive for as long as and\n get as many points as"+\
-        "possible\n\nCONTROLS\n Up: Fire a Laser Bolt\nLeft: Move Left\nRight: Move Right" + \
-        "\n Space: Pause Game\n \nIf you get hit by an alien laser bolt,\n" +\
-        "you will lose a life. \nYou will gain a life \nfor every round you survive\n"+\
-        "The aliens will speed up\n each time you kill one\n and after every round" +\
-        "\nYou will lose the game if\nyou lose all your lives.\n\nPress S to Begin"
-        #Create A Glabel object for the message
+        # Write the Message
+        text = "INSTRUCTIONS \n Goal: Survive for as long as and\n get as many points as" +\
+            "possible\n\nCONTROLS\n Up: Fire a Laser Bolt\nLeft: Move Left\nRight: Move Right" + \
+            "\n Space: Pause Game\n \nIf you get hit by an alien laser bolt,\n" +\
+            "you will lose a life. \nYou will gain a life \nfor every round you survive\n" +\
+            "The aliens will speed up\n each time you kill one\n and after every round" +\
+            "\nYou will lose the game if\nyou lose all your lives.\n\nPress S to Begin"
+        # Create A Glabel object for the message
         intstruction_message = GLabel(text=text)
         intstruction_message.x = (GAME_WIDTH/2.0)
         intstruction_message.y = (GAME_HEIGHT/2.0)
         intstruction_message.font_size = 24
         intstruction_message.font_name = 'RetroGame.ttf'
         intstruction_message.linecolor = "white"
-        #Assign the GLabel Object to the _text attribute
+        # Assign the GLabel Object to the _text attribute
         self._text = intstruction_message
 
     def _dismiss_screen(self):
@@ -255,16 +255,15 @@ class Invaders(GameApp):
         and if so dismisses the welcome screen and changes the state
         of the game to STATE_NEWWAVE
         """
-        #Determine What the player wants to do
+        # Determine What the player wants to do
         curr_keys = self.input.keys
-        if 's' in curr_keys: #Start Game
+        if 's' in curr_keys:  # Start Game
             self._state = STATE_NEWWAVE
             self._text = None
-        if "spacebar" in curr_keys: #Show Instructions
+        if "spacebar" in curr_keys:  # Show Instructions
             self._displayInstructions()
+    # STATE_PAUSED Helpers
 
-
-    #STATE_PAUSED Helpers
     def _handle_pause(self):
         """
         Handles the game when _state is STATE_PAUSED and the player is
@@ -289,23 +288,21 @@ class Invaders(GameApp):
         This method creates a GLabel object for the Paused message
         and assigns it to the attribute _text
         """
-        #Create A Pause Message to and show remaining lives
+        # Create A Pause Message to and show remaining lives
         lives = self._wave.getLives()
         lives = str(lives)
-        pause_message = GLabel(text="Press 'S' to Continue\n" + lives +\
-         " Lives Remaining")
+        pause_message = GLabel(text="Press 'S' to Continue\n" + lives +
+                               " Lives Remaining")
         pause_message.x = (GAME_WIDTH/2.0)
         pause_message.y = (GAME_HEIGHT/2.0)
         pause_message.width = GAME_WIDTH
         pause_message.font_size = 45
         pause_message.font_name = 'RetroGame.ttf'
         pause_message.linecolor = "yellow"
-        #Assign message to _text attrbute
+        # Assign message to _text attrbute
         self._text = pause_message
+    # STATE_ACTIVE HELPERS
 
-
-
-    #STATE_ACTIVE HELPERS
     def _update_score(self):
         """
         Updates the score of the game
@@ -313,9 +310,8 @@ class Invaders(GameApp):
         roundScore = self._wave.getRoundScore()
         self._scorekeeper = self._lastroundscore + roundScore
         self._gamescore.text = "Score: " + str(self._scorekeeper)
+    # START NEW ROUND HELPERS
 
-
-    #START NEW ROUND HELPERS
     def _handle_win(self):
         """
         This method begins a new round for the Player.
@@ -324,19 +320,20 @@ class Invaders(GameApp):
         they made it to and adds a life for them. It then sents the state to
         STATE_INACTIVE so the player can begin the round when they are ready.
         """
-        #Change the Round
+        # Change the Round
         self._round += 1
-        #Get speed and score before the new wave is created and they are cleared
+        # Get speed and score before the new wave is created and they are cleared
         self._alienspeed = self._wave.getAlienSpeed()
         self._lastroundscore += self._wave.getRoundScore() + ROUND_POINTS
-        #Create a Display a Next Round Message
-        win_message = GLabel(text="Round " +str(self._round) + "\n Press S to Begin")
+        # Create a Display a Next Round Message
+        win_message = GLabel(
+            text="Round " + str(self._round) + "\n Press S to Begin")
         win_message.x = (GAME_WIDTH/2.0)
         win_message.y = (GAME_HEIGHT/2.0)
         win_message.font_size = 60
         win_message.font_name = 'RetroGame.ttf'
         self._text = win_message
-        #Change State to so update can handle creating the new round
+        # Change State to so update can handle creating the new round
         self._state = STATE_INACTIVE
 
     def _lives_helper(self):
@@ -359,27 +356,26 @@ class Invaders(GameApp):
         STATE_ACTIVE. It creates a new Wave object and assigns it to
         the attribute _wave.
         """
-        #Create New Wave
+        # Create New Wave
         self._wave = Wave()
         if self._round > 1:
-            #Change Lives to reflect actually amount
+            # Change Lives to reflect actually amount
             lives = self._previouslives + 1
             self._wave.setLives(lives)
-            #Speed up the game
+            # Speed up the game
             for x in range(self._round):
                 self._alienspeed *= A_SPEED_FAC
             self._wave.setAlienSpeed(self._alienspeed)
-            #Begin the Wave
+            # Begin the Wave
         self._state = STATE_ACTIVE
+    # Game Over (STATE_COMPLETE) Helpers
 
-
-    #Game Over (STATE_COMPLETE) Helpers
     def _handle_loss(self):
         """
         This method creates a GLabel object for the Loss message in
         between lives and assigns it to the attribute _text
         """
-        #Create A Game Over Message
+        # Create A Game Over Message
         loss_message = GLabel(text="Game Over")
         loss_message.x = (GAME_WIDTH/2.0)
         loss_message.y = (GAME_HEIGHT/2.0)
@@ -387,5 +383,5 @@ class Invaders(GameApp):
         loss_message.font_name = 'RetroGame.ttf'
         loss_message.linecolor = "white"
         self._text = loss_message
-        #Change State to Complete
+        # Change State to Complete
         self._state = STATE_COMPLETE

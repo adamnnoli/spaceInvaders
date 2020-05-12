@@ -20,9 +20,10 @@ Moving any of these folders or files will prevent the game from working properly
 Author: Walker M. White (wmw2)
 Date:   November 1, 2017 (Python 3 Version)
 """
-from consts import *
-from app import *
+from app import Invaders
+from consts import GAME_HEIGHT
+from consts import GAME_WIDTH
 
 # Application code
 if __name__ == '__main__':
-    Invaders(width=GAME_WIDTH,height=GAME_HEIGHT).run()
+    Invaders(width=GAME_WIDTH, height=GAME_HEIGHT).run()
